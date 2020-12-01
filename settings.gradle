@@ -1,0 +1,3 @@
+include ':CountryModule'
+include ':app'
+rootProject.name = "CountryView"
