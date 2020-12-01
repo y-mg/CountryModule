@@ -11,10 +11,10 @@
 
 | Option | Parameter | Description(KO) | Description(EN) |
 |:----------|:----------|:----------|:----------|
-| setLocale(KO or EN) | KO or EN | 언어 설정 | Language Setting |
-| getLoadCountries(context: Context) | Context | 국가 정보 리스트 가져오기 | Get list of country information |
-| getCountryFlag(nameCode: String) | Country Name Code(KR, US...) | 국기 가져오기 | Get country flag |
-| getDetectedCountry(context: Context) | Context | 현재 국가 정보 가져오기 | Get current country information |
+| setLocale<br/>(KO or EN) | KO or EN | 언어 설정 | Language Setting |
+| getLoadCountries(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context: Context<br/>) | Context | 국가 정보 리스트 가져오기 | Get list of country information |
+| getCountryFlag(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nameCode: String<br/>) | Country Name Code<br/>(KR, US...) | 국기 가져오기 | Get country flag |
+| getDetectedCountry(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context: Context<br/>) | Context | 현재 국가 정보 가져오기 | Get current country information |
 <br/>
 <br/>
 
