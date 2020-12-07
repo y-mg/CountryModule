@@ -51,11 +51,8 @@ class MainActivity : BasicActivity() {
             }
         }
 
-
         setSearch(viewBinding.editSearch, countryListItems)
 
-
-        // 구분선
         val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         decoration.setDrawable(resources.getDrawable(R.drawable.recyclerview_divider, null))
         viewBinding.recyclerView.addItemDecoration(decoration)
@@ -63,9 +60,6 @@ class MainActivity : BasicActivity() {
 
 
 
-    /**
-     * Search 설정
-     */
     private fun setSearch(
         editSearch: AppCompatEditText,
         items: List<CountryPickerModel>
@@ -135,9 +129,6 @@ class MainActivity : BasicActivity() {
 
 
 
-    /**
-     * Flag(국기) 설정
-     */
     private fun setFlag(
         textFlag: AppCompatTextView,
         nameCode: String
@@ -147,9 +138,6 @@ class MainActivity : BasicActivity() {
 
 
 
-    /**
-     * 국가 정보 설정
-     */
     @SuppressLint("SetTextI18n")
     private fun setCountryInfo(
         textCountryInfo: AppCompatTextView,

@@ -6,16 +6,23 @@ import java.io.Serializable
 import java.text.Collator
 
 
+
+/**
+ * @author y-mg
+ *
+ * 국가 정보를 담을 Data 클래스입니다.
+ * This is a data class to hold country information.
+ */
 @Parcelize
 data class CountryPickerModel (
 
-    // 국가 이름
+    // Country Name
     val name: String,
 
-    // 국가 코드
+    // Country Name Code
     val name_code: String,
 
-    // 국가 넘버 코드
+    // Country Number Code
     var number_code: String
 
 ) : Comparable<CountryPickerModel>, Parcelable, Serializable {

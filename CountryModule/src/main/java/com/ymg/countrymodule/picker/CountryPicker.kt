@@ -10,17 +10,23 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.util.*
 
 
+
+/**
+ * @author y-mg
+ *
+ * 이것은 국가 정보를 가져오는 Object 클래스입니다.
+ * This is the Object Class from which the country information is obtained.
+ */
 object CountryPicker {
 
-    const val KO = "ko" // 한국
-    const val EN = "en" // 영어권
+    // Korean, English
+    const val KO = "ko"
+    const val EN = "en"
 
-
-
-    // Locale
+    // Default Locale
     private var locale = KO
 
-    // 국가 기본값 KO, EN
+    // Default Locale Information
     private val DEFAULT_COUNTRY_KO =
         CountryPickerModel(
             "대한민국",
@@ -37,25 +43,31 @@ object CountryPicker {
 
 
     /**
-     * 지역 설정
+     * - 지역(언어)를 설정한다.
+     * - Set up a locale(language).
+     *
+     * @param locale -> KO(korean) or EN(English)
      */
     fun setLocale(locale: String) {
         this.locale = locale
     }
 
     /**
-     * 설정된 지역 값
+     * Return Locale
      */
-    fun getLocale(): String {
+    internal fun getLocale(): String {
         return locale
     }
 
 
 
     /**
-     * 국가 찾기
+     * - 현재 국가 정보를 찾는다.
+     * - Detect current national information.
+     *
+     * @param context
      */
-    fun getDetectedCountry(context: Context): CountryPickerModel? {
+    fun getDetectedCountry(context: Context): CountryPickerModel {
         var countryPickerModel: CountryPickerModel? =
             getDetectSIMCountry(
                 context
@@ -77,12 +89,12 @@ object CountryPicker {
 
         if (countryPickerModel == null) {
             countryPickerModel = when (locale) {
-                // 한국
+                // Korean
                 KO -> {
                     DEFAULT_COUNTRY_KO
                 }
 
-                // 나머지
+                // English
                 else -> {
                     DEFAULT_COUNTRY_EN
                 }
@@ -95,15 +107,18 @@ object CountryPicker {
 
 
     /**
-     * 국기 가져오기
+     * - 국기를 가져온다.
+     * - Getting the country flag.
+     *
+     * @param countryNameCode -> Country Name Code(KR, US...)
      */
     @SuppressLint("DefaultLocale")
-    fun getCountryFlag(nameCode: String): String {
+    fun getCountryFlag(countryNameCode: String): String {
         val flagOffset = 0x1F1E6
         val asciiOffset = 0x41
 
-        val firstChar = Character.codePointAt(nameCode.toUpperCase(), 0) - asciiOffset + flagOffset
-        val secondChar = Character.codePointAt(nameCode.toUpperCase(), 1) - asciiOffset + flagOffset
+        val firstChar = Character.codePointAt(countryNameCode.toUpperCase(), 0) - asciiOffset + flagOffset
+        val secondChar = Character.codePointAt(countryNameCode.toUpperCase(), 1) - asciiOffset + flagOffset
 
         return String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
     }
@@ -111,7 +126,7 @@ object CountryPicker {
 
 
     /**
-     * SIM 기반 국가 정보
+     * Return Country information with SIM
      */
     private fun getDetectSIMCountry(context: Context): CountryPickerModel? {
         val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -123,7 +138,7 @@ object CountryPicker {
             }
 
             else -> {
-                getCountryCode(
+                getCountryNumberCode(
                     context,
                     simCountryISO
                 )
@@ -134,7 +149,7 @@ object CountryPicker {
 
 
     /**
-     * Network 기반 국가정보
+     * Return Country information with network
      */
     private fun getDetectNetworkCountry(context: Context): CountryPickerModel? {
         val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -146,7 +161,7 @@ object CountryPicker {
             }
 
             else -> {
-                getCountryCode(
+                getCountryNumberCode(
                     context,
                     networkCountryISO
                 )
@@ -157,7 +172,7 @@ object CountryPicker {
 
 
     /**
-     * Locale 기반 국가정보
+     * Return Country information with device locale
      */
     private fun getDetectLocaleCountry(context: Context): CountryPickerModel? {
         val localeCountryISO: String? = getCurrentLocale(context).country
@@ -168,7 +183,7 @@ object CountryPicker {
             }
 
             else -> {
-                getCountryCode(
+                getCountryNumberCode(
                     context,
                     localeCountryISO
                 )
@@ -177,7 +192,7 @@ object CountryPicker {
     }
 
     @Suppress("DEPRECATION")
-    fun getCurrentLocale(context: Context): Locale {
+    private fun getCurrentLocale(context: Context): Locale {
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
                 context.resources.configuration.locales.get(0)
@@ -192,11 +207,11 @@ object CountryPicker {
 
 
     /**
-     * 국가 코드 가져오기
+     * Return Country number code
      */
-    private fun getCountryCode(
+    private fun getCountryNumberCode(
         context: Context,
-        nameCode: String
+        countryNameCode: String
     ): CountryPickerModel? {
         val countries =
             getLoadCountries(
@@ -204,7 +219,7 @@ object CountryPicker {
             )
 
         for (country in countries) {
-            if (country.name_code == nameCode) {
+            if (country.name_code == countryNameCode) {
                 return country
             }
         }
@@ -214,31 +229,31 @@ object CountryPicker {
 
 
     /**
-     * raw 파일에서 파싱
+     * - 국가 리스트를 가져온다.
+     * - Getting in a list of countries.
+     *
+     * @param context
      */
     @SuppressLint("DefaultLocale")
     fun getLoadCountries(context: Context): MutableList<CountryPickerModel> {
         val countries = mutableListOf<CountryPickerModel>()
 
         val inputStream = when (locale) {
-            // 한국
+            // Korean
             KO -> {
                 context.resources.openRawResource(R.raw.country_ko)
             }
 
-            // 나머지
+            // English
             else -> {
                 context.resources.openRawResource(R.raw.country_en)
             }
         }
 
-
         val xmlPullParser = XmlPullParserFactory.newInstance().newPullParser()
         xmlPullParser.setInput(inputStream, "UTF-8")
 
-
         var event = xmlPullParser.eventType
-
 
         while (event != XmlPullParser.END_DOCUMENT) {
             if (event == XmlPullParser.END_TAG && xmlPullParser.name == "country") {
@@ -253,10 +268,9 @@ object CountryPicker {
             event = xmlPullParser.next()
         }
 
-
         inputStream.close()
 
-        // Sort List
+        // Sorting List
         countries.sort()
         return countries
     }
