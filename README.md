@@ -57,7 +57,7 @@ fun getLoadCountries(context: Context)
 > This is an Object Class that allows you to set Initial.
 
 
-### Kotlin
+### Kotlin Function
 
 ```kotlin
 /**
